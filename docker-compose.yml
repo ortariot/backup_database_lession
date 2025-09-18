@@ -1,0 +1,38 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres:latest
+    env_file:
+      - .env
+    environment:
+      PGDATA: /data/postgres
+    volumes:
+       - ./db_data:/data/postgres
+       - ./db_backup:/backup
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  postgres_res:
+    container_name: postgres_res
+    image: postgres:latest
+    env_file:
+      - .env
+    environment:
+      PGDATA: /data/postgres
+    volumes:
+       - ./db_backup:/backup
+    ports:
+      - "5433:5432"
+
+  mysql_container:   
+    image: 'mysql:8.0'
+    container_name: mysql_container
+    volumes:
+       - ./db_backup:/backup
+    env_file: .env
+    ports:
+      - "3306:3306"
+
